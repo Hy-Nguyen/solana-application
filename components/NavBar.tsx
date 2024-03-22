@@ -43,8 +43,11 @@ export default function NavBar() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
+          <Link
+            color="foreground"
+            href="/createToken"
+          >
+            Token
           </Link>
         </NavbarItem>
       </NavbarContent>

@@ -1,41 +1,48 @@
 "use client";
 
-import Image from "next/image";
 import { AuroraBackground } from "@/components/ui/aurora-background";
-
-import {
-  WalletMultiButton,
-  WalletConnectButton,
-  WalletDisconnectButton,
-  WalletModal,
-} from "@solana/wallet-adapter-react-ui";
-
-// require("@solana/wallet-adapter-react-ui/styles.css");
-
 import {
   useConnection,
   useWallet,
 } from "@solana/wallet-adapter-react";
-import { Button } from "@nextui-org/react";
+import TransactionForm from "@/components/transactionForm";
 
 export default function Home() {
-  const { publicKey } = useWallet();
+  const { publicKey, sendTransaction } =
+    useWallet();
   const { connection } = useConnection();
+
+  let shortAddress = "";
+
+  if (publicKey) {
+    let address = publicKey.toBase58();
+    shortAddress =
+      address.substring(0, 4) +
+      "..." +
+      address.substring(
+        address.length - 4,
+        address.length
+      );
+  }
+
   return (
     <>
       <AuroraBackground>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center ">
           {!publicKey ? (
-            <div className="text-center text-white text-xl">
-              <h1>
-                Welcome! To get started, connect
-                to Phantom!
-              </h1>
-            </div>
+            <>
+              <div className="text-center text-white text-xl">
+                <h1>
+                  Welcome! To get started, connect
+                  to Phantom!
+                </h1>
+              </div>
+            </>
           ) : (
-            <div className="text-xl text-white">
-              {publicKey?.toBase58()}
-            </div>
+            <TransactionForm
+              connection={connection}
+              pubicKey={publicKey}
+            />
           )}
         </div>
       </AuroraBackground>

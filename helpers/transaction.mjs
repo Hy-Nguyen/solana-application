@@ -22,14 +22,33 @@ const connection = new Connection(
   "confirmed"
 );
 
-const payerKeypair = getKeyPairFromEnv(
-  process.env.PAYER_SECRET_KEY
-);
-const recepientKeypair = getKeyPairFromEnv(
-  process.env.RECEPIENT_SECRET_KEY
+const payerSecret = [
+  199, 191, 235, 229, 84, 97, 210, 144, 0, 183,
+  183, 155, 1, 114, 80, 218, 118, 149, 191, 252,
+  218, 117, 187, 113, 121, 243, 64, 84, 169, 46,
+  207, 174, 203, 210, 105, 153, 7, 172, 180, 135,
+  233, 148, 32, 82, 230, 97, 201, 224, 203, 155,
+  64, 126, 192, 230, 218, 132, 131, 200, 197, 150,
+  202, 197, 164, 108,
+];
+
+const recepientSecret = [
+  88, 189, 31, 207, 250, 125, 246, 23, 50, 235,
+  25, 54, 188, 144, 88, 206, 1, 11, 207, 186, 206,
+  81, 200, 150, 251, 252, 185, 76, 157, 52, 121,
+  125, 117, 85, 122, 81, 156, 155, 162, 101, 209,
+  21, 224, 220, 18, 182, 150, 151, 176, 189, 246,
+  188, 129, 182, 2, 242, 47, 184, 151, 97, 11, 2,
+  162, 204,
+];
+
+const payerKeypair = Keypair.fromSecretKey(
+  new Uint8Array(payerSecret)
 );
 
-let transaction = new Transaction();
+const recepientKeypair = Keypair.fromSecretKey(
+  new Uint8Array(recepientSecret)
+);
 
 let solToSend = 2.5 * LAMPORTS_PER_SOL;
 {
@@ -41,10 +60,19 @@ let solToSend = 2.5 * LAMPORTS_PER_SOL;
     Here, we are sending from 'payer' to'recepient' with 2.5 SOL.
   */
 }
+let transaction = new Transaction();
+
+// const transferInstruction =
+//   SystemProgram.transfer({
+//     fromPublicKey: payerKeypair.publicKey,
+//     toPublicKey: recepientKeypair.publicKey,
+//     lamports: solToSend,
+//   });
+
 const transferInstruction =
   SystemProgram.transfer({
-    fromPublicKey: payerKeypair.publicKey,
-    toPublicKey: recepientKeypair.publicKey,
+    fromPubkey: payerKeypair.publicKey,
+    toPubkey: recepientKeypair.publicKey,
     lamports: solToSend,
   });
 

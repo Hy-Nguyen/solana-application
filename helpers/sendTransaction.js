@@ -19,24 +19,38 @@ const connection = new Connection(
 
 // Payer will be new account that will get AirDropped.
 // Recepient will be my test account on devnet.
-let payerKeyPair;
-let recepient = new PublicKey(
-  process.env.RECEPIENT_PUBLIC_KEY
+const payerSecret = [
+  199, 191, 235, 229, 84, 97, 210, 144, 0, 183,
+  183, 155, 1, 114, 80, 218, 118, 149, 191, 252,
+  218, 117, 187, 113, 121, 243, 64, 84, 169, 46,
+  207, 174, 203, 210, 105, 153, 7, 172, 180, 135,
+  233, 148, 32, 82, 230, 97, 201, 224, 203, 155,
+  64, 126, 192, 230, 218, 132, 131, 200, 197, 150,
+  202, 197, 164, 108,
+];
+
+const recepientSecret = [
+  88, 189, 31, 207, 250, 125, 246, 23, 50, 235,
+  25, 54, 188, 144, 88, 206, 1, 11, 207, 186, 206,
+  81, 200, 150, 251, 252, 185, 76, 157, 52, 121,
+  125, 117, 85, 122, 81, 156, 155, 162, 101, 209,
+  21, 224, 220, 18, 182, 150, 151, 176, 189, 246,
+  188, 129, 182, 2, 242, 47, 184, 151, 97, 11, 2,
+  162, 204,
+];
+
+const payerKeypair = Keypair.fromSecretKey(
+  new Uint8Array(payerSecret)
 );
 
-if (process.env.PAYER_SECRET_KEY) {
-  payerKeyPair = getKeyPairFromEnv(
-    process.env.PAYER_SECRET_KEY
-  );
-} else {
-  let newPayer = Keypair.generate();
-  const newSecret = newPayer.secretKey.toString();
-  fs.appendFileSync(
-    "./.env",
-    `\nPAYER_SECRET_KEY=${newSecret}`
-  );
-}
-console.log(payerKeyPair);
+const recepientKeypair = Keypair.fromSecretKey(
+  new Uint8Array(recepientSecret)
+);
+
+
+console.log(payerKeypair);
+console.log(recepientKeypair);
+
 // Process for Transaction
 // Create Transaction → Create Instructions → Add Instructions to Transaction
 
@@ -47,10 +61,10 @@ solToSend *= LAMPORTS_PER_SOL; // Transaction is in LAMPORTS
 
 (async function () {
   let payerBal = await checkBalance(
-    payerKeyPair.publicKey
+    payerKeypair.publicKey
   );
   let recepientBal = await checkBalance(
-    recepient
+    recepientKeypair.publicKey
   );
 
   console.log(
@@ -71,8 +85,8 @@ solToSend *= LAMPORTS_PER_SOL; // Transaction is in LAMPORTS
 }
 const transferInstruction =
   SystemProgram.transfer({
-    fromPublicKey: payerKeyPair.publicKey,
-    toPublicKey: recepient,
+    fromPubkey: payerKeypair.publicKey,
+    toPubkey: recepientKeypair.publicKey,
     lamports: solToSend,
   });
 
