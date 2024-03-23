@@ -26,6 +26,8 @@ import {
   LAMPORTS_PER_SOL,
   Connection,
   PublicKey,
+  Transaction,
+  SystemProgram,
 } from "@solana/web3.js";
 
 interface FormProps {
@@ -38,6 +40,8 @@ export default function TransactionForm(
   const [balance, setBalance] = useState(0);
   const [addressCheck, setAddressCheck] =
     useState(false);
+  const [recepient, setRecepient] = useState("");
+  const [solToSend, setSolToSend] = useState(0);
   const { publicKey, sendTransaction } =
     useWallet();
   const { connection } = useConnection();
@@ -55,6 +59,7 @@ export default function TransactionForm(
       );
   }
 
+  // Balance Fetcher
   useEffect(() => {
     if (!connection || !publicKey) {
       return;
@@ -66,13 +71,37 @@ export default function TransactionForm(
       });
   }, [connection, publicKey]);
 
-  function sendSol(
+  // Form Handler
+  async function sendSol(
     e: React.FormEventHandler<HTMLFormElement>
   ) {
     e.preventDefault();
-    alert("clicked");
+
+    var recepientPubKey = new PublicKey(
+      recepient
+    );
+
+    let transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: recepientPubKey,
+        lamports: solToSend,
+      })
+    );
+    let transactionSignature;
+    try {
+      transactionSignature =
+        await sendTransaction(
+          transaction,
+          connection
+        );
+    } catch (error) {
+      console.log(error);
+    }
+    alert(transactionSignature);
   }
 
+  // Checks if Address is a valid Solana Address
   function checkAddress(address: string) {
     if (address.length !== 44) {
       return true;
@@ -91,11 +120,21 @@ export default function TransactionForm(
 
     return false;
   }
-  function changeHandler(
+
+  // Checks if Recepient is a valid Solana Address and updates Recepient
+  function recepientHandler(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
     setAddressCheck(checkAddress(e.target.value));
-    console.log(addressCheck);
+    setRecepient(e.target.value);
+  }
+
+  function solAmountHandler(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    let sol =
+      Number(e.target.value) * LAMPORTS_PER_SOL;
+    setSolToSend(sol);
   }
 
   return (
@@ -131,7 +170,7 @@ export default function TransactionForm(
               label="Recepient"
               className="w-3/4"
               variant="bordered"
-              onChange={changeHandler}
+              onChange={recepientHandler}
               isInvalid={addressCheck}
               isRequired
               errorMessage={
@@ -139,13 +178,13 @@ export default function TransactionForm(
                 "Enter a valid address"
               }
             />
-
             <Input
               type="number"
               label="Price"
-              placeholder="0.00"
-              variant="bordered"
               className="w-3/4 pt-4"
+              variant="bordered"
+              step={0.1}
+              onChange={solAmountHandler}
               endContent={
                 <div className="pointer-events-none flex items-center">
                   <span className="text-default-400 text-large">
