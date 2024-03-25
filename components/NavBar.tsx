@@ -35,11 +35,11 @@ export default function NavBar() {
         <NavbarItem>
           <Link
             color="foreground"
-            href="#"
+            href="/transaction"
             aria-current="page"
             isBlock
           >
-            Customers
+            Transaction
           </Link>
         </NavbarItem>
         <NavbarItem>

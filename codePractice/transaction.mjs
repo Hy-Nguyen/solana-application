@@ -50,7 +50,7 @@ const recepientKeypair = Keypair.fromSecretKey(
   new Uint8Array(recepientSecret)
 );
 
-let solToSend = 2.5 * LAMPORTS_PER_SOL;
+let solToSend = 10 * LAMPORTS_PER_SOL;
 {
   /*
     Instructions:
@@ -85,6 +85,16 @@ const signature = await sendAndConfirmTransaction(
 );
 
 console.log("Transaction signature:", signature);
+
+const info =
+  await connection.getParsedTransaction(
+    signature
+  );
+console.log(info);
+// console.log(
+//   "------------------------------------"
+// );
+// console.log(info.meta);
 
 function getKeyPairFromEnv(secretKey) {
   const secretKeyUint8Array = new Uint8Array(

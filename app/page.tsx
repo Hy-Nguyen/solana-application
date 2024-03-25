@@ -8,8 +8,7 @@ import {
 import TransactionForm from "@/components/transactionForm";
 
 export default function Home() {
-  const { publicKey, sendTransaction } =
-    useWallet();
+  const { publicKey } = useWallet();
   const { connection } = useConnection();
 
   let shortAddress = "";
@@ -28,21 +27,18 @@ export default function Home() {
   return (
     <>
       <AuroraBackground>
-        <div className="flex flex-col justify-center items-center ">
+        <div className="  flex flex-col justify-center items-center ">
           {!publicKey ? (
             <>
               <div className="text-center text-white text-xl">
                 <h1>
-                  Welcome! To get started, connect
-                  to Phantom!
+                  Welcome! To send SOL, connect to
+                  your wallet!
                 </h1>
               </div>
             </>
           ) : (
-            <TransactionForm
-              connection={connection}
-              pubicKey={publicKey}
-            />
+            <TransactionForm />
           )}
         </div>
       </AuroraBackground>

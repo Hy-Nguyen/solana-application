@@ -15,7 +15,10 @@ export default function Provider({
   const wallets = [new PhantomWalletAdapter()];
   return (
     <NextUIProvider>
-      <ConnectionProvider endpoint={endpoint}>
+      <ConnectionProvider
+        endpoint={endpoint}
+        config={{ commitment: "finalized" }}
+      >
         <WalletProvider wallets={wallets}>
           <WalletModalProvider>
             {children}
