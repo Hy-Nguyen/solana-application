@@ -6,6 +6,7 @@ import {
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
   createMintToInstruction,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 
 import {
@@ -19,15 +20,7 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 
-let secret = [
-  88, 189, 31, 207, 250, 125, 246, 23, 50, 235,
-  25, 54, 188, 144, 88, 206, 1, 11, 207, 186, 206,
-  81, 200, 150, 251, 252, 185, 76, 157, 52, 121,
-  125, 117, 85, 122, 81, 156, 155, 162, 101, 209,
-  21, 224, 220, 18, 182, 150, 151, 176, 189, 246,
-  188, 129, 182, 2, 242, 47, 184, 151, 97, 11, 2,
-  162, 204,
-];
+
 
 let payerKP = Keypair.fromSecretKey(
   new Uint8Array(secret)
@@ -119,7 +112,9 @@ async function createAssocTokenAccount(
       payer, // PublicKey
       associatedTokenAddress, //PublicKey
       payer, //PublicKey
-      mintpublic //PublicKey
+      mintpublic, //PublicKey
+      TOKEN_PROGRAM_ID, //Program ID
+      ASSOCIATED_TOKEN_PROGRAM_ID //Program ID
     )
   );
 

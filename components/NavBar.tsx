@@ -20,7 +20,7 @@ export default function NavBar() {
     >
       <NavbarBrand>
         <p className="font-bold text-inherit">
-          ACME
+          Hy
         </p>
       </NavbarBrand>
       <NavbarContent
@@ -29,17 +29,7 @@ export default function NavBar() {
       >
         <NavbarItem>
           <Link color="foreground" href="/">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link
-            color="foreground"
-            href="/transaction"
-            aria-current="page"
-            isBlock
-          >
-            Transaction
+            Send Sol
           </Link>
         </NavbarItem>
         <NavbarItem>
@@ -47,9 +37,10 @@ export default function NavBar() {
             color="foreground"
             href="/createToken"
           >
-            Token
+            Create Token
           </Link>
         </NavbarItem>
+        <NavbarItem></NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="">

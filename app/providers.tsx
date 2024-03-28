@@ -17,7 +17,7 @@ export default function Provider({
     <NextUIProvider>
       <ConnectionProvider
         endpoint={endpoint}
-        config={{ commitment: "finalized" }}
+        // config={{ commitment: "finalized" }}
       >
         <WalletProvider wallets={wallets}>
           <WalletModalProvider>

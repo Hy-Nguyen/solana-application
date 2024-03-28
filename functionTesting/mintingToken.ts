@@ -27,7 +27,7 @@ import {
  */
 export async function createMintTransaction(
   payerPublicKey: PublicKey,
-  decimals: Number = 0,
+  decimals: number = 0,
   connection: Connection
 ) {
   const minBalanceForRentExempt =
@@ -82,17 +82,21 @@ export async function createAssociatedTokenAccountTransaction(
       false // Allow Owner Off Curve?
     );
 
-  const transaction = new Transaction().add(
-    createAssociatedTokenAccountInstruction(
-      payer, // PublicKey
-      associatedTokenAddress, //PublicKey
-      payerPublicKey, //PublicKey
-      mintAccountPublicKey //PublicKey
-    )
-  );
+  const createAccountTransaction =
+    new Transaction().add(
+      createAssociatedTokenAccountInstruction(
+        payerPublicKey, // PublicKey
+        associatedTokenAddress, //PublicKey
+        payerPublicKey, //PublicKey
+        mintAccountPublicKey //PublicKey
+      )
+    );
 
-  return { transaction, associatedTokenAddress };
-  //   const {transaction, associatedTokenAddress} = await createAssociatedTokenAccount(mintAccountPublicKey, payer
+  return {
+    createAccountTransaction,
+    associatedTokenAddress,
+  };
+  //   const {createAccountTransaction, associatedTokenAddress} = await createAssociatedTokenAccount(mintAccountPublicKey, payer
 }
 
 /**
@@ -104,18 +108,25 @@ export async function createAssociatedTokenAccountTransaction(
  * @return {Transaction}
  */
 export async function mintToAssocTokenAccount(
-  mintAccountPublicKey,
-  tokenAcountPublicKey,
-  payerPublicKey,
-  tokenAmount
+  mintAccountPublicKey: PublicKey | undefined,
+  tokenAcountPublicKey: PublicKey | undefined,
+  payerPublicKey: PublicKey | undefined,
+  tokenAmount: number | bigint = 1
 ) {
-  const transaction = new Transaction().add(
-    createMintToInstruction(
-      mint, // mint public key
-      destination, // token account public key
-      authority, // payer public key
-      amount // token * 10^decimals
-    )
-  );
+  let transaction;
+  if (
+    mintAccountPublicKey !== undefined &&
+    tokenAcountPublicKey !== undefined &&
+    payerPublicKey !== undefined
+  ) {
+    transaction = new Transaction().add(
+      createMintToInstruction(
+        mintAccountPublicKey, // mint public key
+        tokenAcountPublicKey, // token account public key
+        payerPublicKey, // payer public key
+        tokenAmount // token * 10^decimals
+      )
+    );
+  }
   return transaction;
 }

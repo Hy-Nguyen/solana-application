@@ -32,10 +32,7 @@ import {
   SystemProgram,
 } from "@solana/web3.js";
 
-
-export default function TransactionForm(
-
-) {
+export default function TransactionForm() {
   // States
   {
     /*
@@ -76,6 +73,12 @@ export default function TransactionForm(
     useDisclosure();
 
   // Balance Fetcher
+  async function fetchBalance() {
+    let bal = await connection.getBalance(
+      publicKey
+    );
+    setBalance(bal / LAMPORTS_PER_SOL);
+  }
   useEffect(() => {
     if (!connection || !publicKey) {
       return;
@@ -121,6 +124,7 @@ export default function TransactionForm(
         transaction,
         connection
       );
+      await connection.confirmTransaction(sign);
 
       setTransactionSignature(sign); // Save Transaction Signature
       setTransaction(true); // true = Transaction Sent
@@ -128,7 +132,7 @@ export default function TransactionForm(
     } catch (error) {
       console.log(error);
     }
-
+    fetchBalance();
     setIsLoading(false); // Transaction Complete, Loading State Reset
 
     document
